@@ -33,11 +33,13 @@ class Calculadora:
         try:
             a_float = float(a)
             b_float = float(b)
-            if b_float == 0:
-                raise ValueError("No se puede dividir entre cero")
-            return a_float / b_float
         except (ValueError, TypeError):
             raise ValueError("Los operandos deben ser números válidos")
+        
+        if b_float == 0:
+            raise ValueError("No se puede dividir entre cero")
+        
+        return a_float / b_float
 
     @staticmethod
     def potencia(a, b):
@@ -52,11 +54,13 @@ class Calculadora:
         """Calcula la raíz cuadrada de un número."""
         try:
             a_float = float(a)
-            if a_float < 0:
-                raise ValueError("No se puede calcular la raíz cuadrada de un número negativo")
-            return a_float ** 0.5
         except (ValueError, TypeError):
             raise ValueError("El operando debe ser un número válido")
+        
+        if a_float < 0:
+            raise ValueError("No se puede calcular la raíz cuadrada de un número negativo")
+        
+        return a_float ** 0.5
 
     @staticmethod
     def porcentaje(a, b):
@@ -64,11 +68,13 @@ class Calculadora:
         try:
             a_float = float(a)
             b_float = float(b)
-            if b_float == 0:
-                raise ValueError("El divisor no puede ser cero para calcular porcentaje")
-            return (a_float / b_float) * 100
         except (ValueError, TypeError):
             raise ValueError("Los operandos deben ser números válidos")
+        
+        if b_float == 0:
+            raise ValueError("El divisor no puede ser cero para calcular porcentaje")
+        
+        return (a_float / b_float) * 100
 
     @staticmethod
     def evaluar_expresion(expresion):
@@ -76,17 +82,17 @@ class Calculadora:
         Evalúa una expresión matemática simple.
         Solo permite operaciones básicas y números.
         """
-        # Validar caracteres seguros
-        caracteres_permitidos = set('0123456789.+-*/() ')
-        if not all(c in caracteres_permitidos for c in expresion):
-            raise ValueError("La expresión contiene caracteres no permitidos")
-        
-        # Validar que no sea una expresión peligrosa
+        # Primero validar palabras prohibidas
         palabras_prohibidas = ['import', 'exec', 'eval', 'open', 'file', '__']
         for palabra in palabras_prohibidas:
             if palabra in expresion.lower():
                 raise ValueError("Expresión no permitida")
-        
+
+        # Luego validar caracteres
+        caracteres_permitidos = set('0123456789.+-*/() ')
+        if not all(c in caracteres_permitidos for c in expresion):
+            raise ValueError("La expresión contiene caracteres no permitidos")
+
         try:
             # Usar eval con precaución (en un entorno controlado)
             resultado = eval(expresion, {'__builtins__': None}, {})
